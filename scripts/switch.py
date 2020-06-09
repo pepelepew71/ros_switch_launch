@@ -13,7 +13,7 @@ def init_roslaunch():
     global ROSLAUNCH_PARENT
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid=uuid)
-    ROSLAUNCH_PARENT = roslaunch.parent.ROSLaunchParent(run_id=uuid, roslaunch_files=((LAUNCH_FILE,)))
+    ROSLAUNCH_PARENT = roslaunch.parent.ROSLaunchParent(run_id=uuid, roslaunch_files=((PATH_FILE,)))
 
 def cb_launch(request):
     global IS_START, IS_RUNNING
@@ -33,7 +33,7 @@ def cb_launch(request):
         IS_START = False
         IS_RUNNING = False
         ROSLAUNCH_PARENT.shutdown()
-        rospy.loginfo("launch_node stop : {}".format(LAUNCH_FILE))
+        rospy.loginfo("switch stop : {}".format(PATH_FILE))
         init_roslaunch()
         response.message = "shutdown"
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     rospy.init_node(name='switch', anonymous=False)
 
     # -- Get parameters
-    LAUNCH_FILE = rospy.get_param(param_name="~launch_file")
+    PATH_FILE = rospy.get_param(param_name="~path_file")
 
     # -- Node function
     rospy.Service(name="~turn_on", service_class=SetBool, handler=cb_launch)
@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     while not rospy.is_shutdown():
         if IS_START:
-            rospy.loginfo("switch start : {}".format(LAUNCH_FILE))
+            rospy.loginfo("switch start : {}".format(PATH_FILE))
             ROSLAUNCH_PARENT.start()
             IS_START = False
         rate.sleep()
