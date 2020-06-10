@@ -3,12 +3,13 @@
 <launch>
 
     <!-- args -->
-    <arg name="path_file" default="$(find ros_switch_launch)/launch/_scenario_gpsnav.launch" />
-    <!-- <arg name="path_file" default="$(find ros_switch_launch)/launch/_scenario_slam.launch" /> -->
+    <arg name="path_file" default="" />
+    <arg name="is_shutdown_zero_vel" default="true" />
 
     <!-- # launch_switch node which can start/shutdown a launch file-->
     <node pkg="ros_switch_launch" type="switch.py" name="switch" output="screen">
         <param name="path_file" type="string" value="$(arg path_file)" />
+        <param name="is_shutdown_zero_vel" type="bool" value="$(arg is_shutdown_zero_vel)" />
     </node>
 
 </launch>

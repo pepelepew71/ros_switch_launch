@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+
+    <!-- turtlesim_node -->
+    <node pkg="turtlesim" type="turtlesim_node" name="turtlesim" />
+
+    <!-- turtle_teleop_key -->
+    <node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen" />
+
+    <!-- ros_switch_launch -->
+    <include file="$(find ros_switch_launch)/launch/switch.launch">
+        <arg name="path_file" value="$(find ros_teleop)/launch/joy.launch" />
+    </include>
+
+</launch>
