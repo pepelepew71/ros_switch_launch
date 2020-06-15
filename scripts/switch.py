@@ -59,13 +59,16 @@ if __name__ == "__main__":
     if is_shutdown_zero_vel:
         PUB_CMD_VEL = rospy.Publisher(name="cmd_vel", data_class=Twist, queue_size=1)
 
-    # -- For running ROSLaunchParent in main process
+    # -- Flag for running ROSLaunchParent in main process
     IS_START = False
     IS_RUNNING = False
     ROSLAUNCH_PARENT = None
-    init_roslaunch()
-    rate = rospy.Rate(0.5)
 
+    # -- Initialize ROSLAUNCH_PARENT
+    init_roslaunch()
+
+    # -- Loop
+    rate = rospy.Rate(1.0)  # 2 Hz
     while not rospy.is_shutdown():
         if IS_START:
             rospy.loginfo("switch start : {}".format(PATH_FILE))
