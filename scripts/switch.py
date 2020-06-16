@@ -8,6 +8,7 @@ import rospy
 import roslaunch
 from geometry_msgs.msg import Twist
 from std_srvs.srv import SetBool, SetBoolResponse
+from std_msgs.msg import String
 
 def init_roslaunch():
     global ROSLAUNCH_PARENT
@@ -43,6 +44,7 @@ def cb_launch(request):
         pub_zero()
         init_roslaunch()
         response.message = "shutdown"
+        PUB_STATUS.publish("")
 
     return response
 
@@ -53,11 +55,16 @@ if __name__ == "__main__":
     # -- Get parameters
     PATH_FILE = rospy.get_param(param_name="~path_file")
     is_shutdown_zero_vel = rospy.get_param(param_name="~is_shutdown_zero_vel")
+    IS_PUB_STATUS = rospy.get_param(param_name="~is_pub_status")
 
     # -- Node function
     rospy.Service(name="~turn_on", service_class=SetBool, handler=cb_launch)
+
     if is_shutdown_zero_vel:
         PUB_CMD_VEL = rospy.Publisher(name="cmd_vel", data_class=Twist, queue_size=1)
+
+    if IS_PUB_STATUS:
+        PUB_STATUS = rospy.Publisher(name="/status_for_web", data_class=String, queue_size=1)
 
     # -- Flag for running ROSLaunchParent in main process
     IS_START = False
@@ -74,4 +81,5 @@ if __name__ == "__main__":
             rospy.loginfo("switch start : {}".format(PATH_FILE))
             ROSLAUNCH_PARENT.start()
             IS_START = False
+            PUB_STATUS.publish("Executing")
         rate.sleep()
